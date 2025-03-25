@@ -36,6 +36,19 @@ def run_completion(
         ValueError: If OPENROUTER_API_KEY environment variable is not set
         RuntimeError: If the OpenRouter API request fails
         json.JSONDecodeError: If tool arguments cannot be parsed
+
+    Notes:
+
+    The OPENROUTER_API_KEY environment variable must be set with a valid API key from OpenRouter.
+
+    The messages is a list of dicts with the following structure:
+    [
+        {"role": "system", "content": "You are a helpful assistant... etc."},
+        {"role": "user", "content": "I need help with... etc."},
+        {"role": "assistant", "content": "I can help with that... etc."},
+        {"role": "user", "content": "Yes, please... etc."},
+        ...
+    ]
     """
     api_key = os.getenv("OPENROUTER_API_KEY")
     if not api_key:
