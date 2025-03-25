@@ -16,6 +16,27 @@ def run_completion(
     *,
     model: str
 ):
+    """Execute an AI completion request using the OpenRouter API with support for tool calls.
+
+    This function manages a conversation with an AI model, handling tool execution
+    and response processing in a loop until a final response is received.
+
+    Args:
+        messages: List of conversation messages, each being a dictionary with role and content.
+        model: Name of the OpenRouter model to use for completion.
+
+    Returns:
+        tuple: Contains:
+            - content (str): The final response content from the model
+            - conversation_messages (List): Complete conversation history including tool calls
+            - total_prompt_tokens (int): Total tokens used in prompts
+            - total_completion_tokens (int): Total tokens used in completions
+
+    Raises:
+        ValueError: If OPENROUTER_API_KEY environment variable is not set
+        RuntimeError: If the OpenRouter API request fails
+        json.JSONDecodeError: If tool arguments cannot be parsed
+    """
     api_key = os.getenv("OPENROUTER_API_KEY")
     if not api_key:
         raise ValueError("OPENROUTER_API_KEY environment variable not set")
