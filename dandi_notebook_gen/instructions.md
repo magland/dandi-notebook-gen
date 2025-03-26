@@ -1,6 +1,6 @@
 # Notebook Generation Instructions
 
-You are going to create a Jupytext notebook called `notebook.py` that will help researchers explore and analyze a Dandiset {{ DANDISET_ID }}. After you create the notebook, convert it to `notebook.ipynb` and execute the Jupyter notebook to make sure it runs without errors. If there are errors, you will need to fix them in the original `notebook.py` file, re-convert to a notebook, and re-run the notebook, repeating until it runs properly.
+You are going to create a Jupytext notebook called `notebook.py` that will help researchers explore and analyze a Dandiset {{ DANDISET_ID }}. After you create the notebook, convert it to `notebook.ipynb` and execute the Jupyter notebook to make sure it runs without errors. If there are errors, you will need to fix them in the original `notebook.py` file, re-convert and re-run the notebook, repeating until it runs properly.
 
 The notebook should:
 
@@ -17,9 +17,8 @@ Here's the plan that you should follow:
 4. Do exploratory research on the contents of the Dandiset by creating and executing python scripts in a tmp_scripts subdirectory to generate text output and plots.
   - After executing each script, if you created plots, review the plots using `dandi-notebook-gen-tools analyze-plot tmp_scripts/{name.png}` to make sure they are informative and useful. If they are not, you may need to adjust the script and re-run it.
 5. Write the content of the notebook to `notebook.py`, including the introduction, dataset structure exploration, sample data access and visualization, explanatory markdown cells, and examples of common analyses.
-6. Run `jupytext --to notebook notebook.py` to convert the notebook to a Jupyter notebook.
-7. Execute the resulting `notebook.ipynb` using `jupyter execute --inplace notebook.ipynb` to make sure it runs without errors and to produce the output cells.
-8. If there are errors, fix them in the Jupytext `notebook.py` file, convert it to `notebook.ipynb`, and re-run the notebook, repeating these steps until the notebook runs properly.
+6. Run `jupytext --to notebook notebook.py && jupyter execute --inplace notebook.ipynb` to convert the notebook to a Jupyter notebook and execute the resulting `notebook.ipynb` to make sure it runs without errors and produces output cells.
+7. If there are errors, fix them in the Jupytext `notebook.py` file, re-run the above command to convert and execute, repeating these steps until the notebook runs properly.
 
 ## Calling tools
 
@@ -54,7 +53,7 @@ Create and execute python scripts in a tmp_scripts subdirectory. The scripts can
 dandi-notebook-gen-tools analyze-plot tmp_scripts/{name.png}
 ```
 
-to learn about the graphs that you create. This will help you know whether the graphs are informative enough to include in the notebook as well as information about the data that will help you make decisions and know how to describe things in the notebook. Both the script outputs and plots will help inform you about what to put in the notebook. Feel free to run as many scripts as you need to gather the information required to make a good notebook. The more quality information you have, the better you will be able to do in making the notebook. Include comments at the top of each script explaining what information you are trying to obtain with the script.
+to learn about the graphs that you create. This will help you know whether the graphs are informative enough to include in the notebook as well as information about the data that will help you make decisions and know how to describe things in the notebook. Both the script outputs and plots will help inform you about what to put in the notebook. Feel free to transform, process, and combine the data in common ways to make interesting, informative plots for a scientist to interpret. Feel free to run as many scripts as you need to gather the information required to make a good notebook. The more quality information you have, the better you will be able to do in making the notebook. Include comments at the top of each script explaining what information you are trying to obtain with the script.
 
 IMPORTANT: Every good quality plot produced by the scripts should be included in the final notebook.
 
@@ -100,3 +99,6 @@ When calling `lindi.LindiH5pyFile.from_lindi_file` you should not use the downlo
 import seaborn as sns
 sns.set_theme()
 ```
+Do not use seaborn styling for plotting images.
+
+Image masks values range from 0 to 1. If you are plotting all image masks superimposed on each other in a single figure, use a heatmap with np.max on the image masks.
