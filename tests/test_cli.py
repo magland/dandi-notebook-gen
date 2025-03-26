@@ -81,7 +81,7 @@ def test_notebook_gen_command(mock_run_completion):
         assert "Dandiset 000001" in result.output
 
         # Check that the file was created
-        assert os.path.exists("dandiset_000001_exploration.py")
+        assert os.path.exists("dandiset_000001_exploration.ipynb")
 
 @patch('dandi_notebook_gen.generator.run_completion')
 def test_notebook_gen_with_output(mock_run_completion):
@@ -92,7 +92,7 @@ def test_notebook_gen_with_output(mock_run_completion):
     runner = CliRunner()
     with tempfile.TemporaryDirectory() as tmpdir:
         # Create a custom output path
-        output_path = os.path.join(tmpdir, "custom_notebook.py")
+        output_path = os.path.join(tmpdir, "custom_notebook.ipynb")
 
         # Run the CLI command with the output option
         result = runner.invoke(notebook_gen_cli, [

@@ -20,7 +20,7 @@ def read_instructions() -> str:
     with open(prompt_path, 'r') as f:
         return f.read()
 
-def generate_notebook(dandiset_id: str, output_path=None, model="google/gemini-2.0-flash-001"):
+def generate_notebook(dandiset_id: str, output_path=None, model="anthropic/claude-3.5-sonnet"):
     """
     Generate a Python script in jupytext format for exploring a Dandiset.
 
@@ -40,7 +40,7 @@ def generate_notebook(dandiset_id: str, output_path=None, model="google/gemini-2
     """
     # Determine the output path
     if output_path is None:
-        output_path = f"dandiset_{dandiset_id}_exploration.py"
+        output_path = f"dandiset_{dandiset_id}_exploration.ipynb"
 
     instructions = read_instructions()
     # replace {{ DANDISET_ID }} with the actual dandiset_id
@@ -54,9 +54,9 @@ def generate_notebook(dandiset_id: str, output_path=None, model="google/gemini-2
             model=model,
             cwd=temp_dir,
         )
-        # check that the notebook.py was created
-        notebook_path = os.path.join(temp_dir, "notebook.py")
+        # check that the notebook.ipynb was created
+        notebook_path = os.path.join(temp_dir, "notebook.ipynb")
         if not os.path.exists(notebook_path):
-            raise FileNotFoundError("notebook.py was not created")
-        # move the notebook.py to the output path
+            raise FileNotFoundError("notebook.ipynb was not created")
+        # move the notebook.ipynb to the output path
         os.rename(notebook_path, output_path)
