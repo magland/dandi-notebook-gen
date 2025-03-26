@@ -70,4 +70,4 @@ Keep in mind that through your tool calls you have been given information about 
 
 When showing unit IDs or channel IDs, be sure to use the actual IDs rather than just the indices.
 
-When calling `lindi.LindiH5pyFile.from_lindi_file` with a URL, the URL should be a nwb.lindi.json file which should come from the nwb-file-info tool. It should NOT be a download URL to the NWB file from api.dandiarchive.org.
+When calling `lindi.LindiH5pyFile.from_lindi_file` you should not use the download URL directly, instead you should follow the instructions from the `nwb_file_info` tool which will have the appropriate URL to use and python commands to incorporate in the notebook.
