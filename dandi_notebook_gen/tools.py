@@ -1,6 +1,7 @@
 from typing import Dict, Any, Optional
 import requests
-
+import os
+import base64
 
 def dandiset_assets(
     dandiset_id: str,
@@ -48,7 +49,6 @@ def dandiset_assets(
         raise RuntimeError(f"Failed to fetch dandiset assets: {response.text}")
     return response.json()
 
-
 def nwb_file_info(dandiset_id: str, nwb_file_url: str) -> Dict[str, Any]:
     """Get information about an NWB file.
 
@@ -73,7 +73,6 @@ def nwb_file_info(dandiset_id: str, nwb_file_url: str) -> Dict[str, Any]:
     if response.status_code != 200:
         raise RuntimeError(f"Failed to fetch NWB file info: {response.text}")
     return response.json()
-
 
 def dandiset_info(dandiset_id: str, version: str = "draft") -> Dict[str, Any]:
     """Get information about a specific version of a DANDI dataset.
@@ -103,7 +102,6 @@ def dandiset_info(dandiset_id: str, version: str = "draft") -> Dict[str, Any]:
     if response.status_code != 200:
         raise RuntimeError(f"Failed to fetch dandiset info: {response.text}")
     return response.json()
-
 
 dandiset_info_spec = {
     "type": "function",
@@ -191,3 +189,106 @@ Be careful not to load too much data at once, as it can be slow and use a lot of
     },
 }
 setattr(nwb_file_info, "spec", nwb_file_info_spec)
+
+def analyze_plot(image_path: str, additional_instructions: Optional[str] = None) -> Dict[str, Any]:
+    """Analyze a scientific plot using the OpenRouter API with GPT-4V.
+
+    This function reads an image file containing a scientific plot,
+    converts it to base64, and uses OpenRouter's API with GPT-4V to
+    generate a detailed description and analysis of the plot.
+
+    Parameters
+    ----------
+    image_path : str
+        Path to the image file (PNG format recommended)
+    additional_instructions : str, optional
+        Additional instructions to include in the system prompt
+
+    Returns
+    -------
+    Dict[str, Any]
+        Dictionary containing the analysis text in the 'text' field
+
+    Raises
+    ------
+    RuntimeError
+        If the API request fails or if OPENROUTER_API_KEY is not set
+    FileNotFoundError
+        If the image file does not exist
+    """
+    api_key = os.environ.get('OPENROUTER_API_KEY')
+    if not api_key:
+        raise RuntimeError("OPENROUTER_API_KEY environment variable is required")
+
+    with open(image_path, 'rb') as f:
+        image_data = f.read()
+    base64_image = base64.b64encode(image_data).decode('utf-8')
+
+    system_prompt = f"You are an expert at analyzing scientific plots. Your responses will be used by an AI system to understand whether plots are informative and what information they convey.\n{additional_instructions or ''}"
+
+    payload = {
+        "model": "openai/gpt-4o",
+        "messages": [
+            {
+                "role": "system",
+                "content": system_prompt
+            },
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": "Please provide a very detailed description and analysis of the plot in the image below."
+                    },
+                    {
+                        "type": "image_url",
+                        "image_url": {
+                            "url": f"data:image/png;base64,{base64_image}"
+                        }
+                    }
+                ]
+            }
+        ],
+        "max_tokens": 1000
+    }
+
+    response = requests.post(
+        'https://openrouter.ai/api/v1/chat/completions',
+        json=payload,
+        headers={
+            'Authorization': f'Bearer {api_key}',
+            'HTTP-Referer': 'https://neurosift.app',
+            'Content-Type': 'application/json'
+        }
+    )
+
+    if response.status_code != 200:
+        raise RuntimeError(f"Failed to analyze plot: {response.text}")
+
+    result = response.json()
+    return {"text": result['choices'][0]['message']['content']}
+
+analyze_plot_spec = {
+    "type": "function",
+    "function": {
+        "name": "analyze_plot",
+        "description": """Analyze a scientific plot using the OpenRouter API with GPT-4V.
+
+This function reads an image file containing a scientific plot and uses OpenRouter's API with GPT-4V vision model to generate a detailed description and analysis of the plot content.""",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "image_path": {
+                    "type": "string",
+                    "description": "Path to the image file (PNG format recommended)"
+                },
+                "additional_instructions": {
+                    "type": "string",
+                    "description": "Additional instructions to include in the system prompt (optional)"
+                }
+            },
+            "required": ["image_path"]
+        }
+    }
+}
+setattr(analyze_plot, "spec", analyze_plot_spec)
