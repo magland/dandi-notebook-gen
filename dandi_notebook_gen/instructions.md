@@ -1,14 +1,23 @@
 # Notebook Generation Instructions
 
-You are going to create a Jupytext notebook called notebook.py that will help researchers explore and analyze a Dandiset {{ DANDISET_ID }}. After you create the notebook, execute it using `python notebook.py` to make sure it runs without errors. If there are errors, you will need to fix them and then re-run the notebook, repeating until it runs properly.
+You are going to create a Jupytext notebook called `notebook.py` that will help researchers explore and analyze a Dandiset {{ DANDISET_ID }}. After you create the notebook, convert it to `notebook.ipynb` and execute the Jupyter notebook to make sure it runs without errors. If there are errors, you will need to fix them in the original `notebook.py` file, re-convert to a notebook, and re-run the notebook, repeating until it runs properly.
 
-The notebook should
+The notebook should:
 
 1. Provide an introduction to the Dandiset, including its name, description, and key metadata
 2. Include code to load and explore the dataset's structure
 3. Demonstrate how to access and visualize sample data from NWB files
 4. Include explanatory markdown cells that guide the user through the analysis process
 5. Provide examples of common analyses that might be relevant to the dataset's content
+
+Here's the plan that you should follow:
+1. Get the Dandiset metadata using `dandi-notebook-gen-tools dandiset-info {{ DANDISET_ID }}`.
+2. Get the Dandiset assets using `dandi-notebook-gen-tools dandiset-assets {{ DANDISET_ID }}`.
+3. Choose an NWB file from the assets and get its information using `dandi-notebook-gen-tools nwb-file-info {{ DANDISET_ID }} <NWB_FILE_URL>`.
+4. Write the content of the notebook to `notebook.py`, including the introduction, dataset structure exploration, sample data access and visualization, explanatory markdown cells, and examples of common analyses.
+5. Run `jupytext --to notebook notebook.py` to convert the notebook to a Jupyter notebook.
+6. Execute the resulting `notebook.ipynb` using `jupyter execute --inplace notebook.ipynb` to make sure it runs without errors and to produce the output cells.
+7. If there are errors, fix them in the Jupytext `notebook.py` file, convert it to `notebook.ipynb`, and re-run the notebook, repeating these steps until the notebook runs properly.
 
 ## Calling tools
 
@@ -70,3 +79,9 @@ Keep in mind that through your tool calls you have been given information about 
 When showing unit IDs or channel IDs, be sure to use the actual IDs rather than just the indices.
 
 When calling `lindi.LindiH5pyFile.from_lindi_file` you should not use the download URL directly, instead you should follow the instructions from the `nwb_file_info` tool which will have the appropriate URL to use and python commands to incorporate in the notebook.
+
+`plt.style.use('seaborn')` is deprecated. If you want to use seaborn styling, use:
+```
+import seaborn as sns
+sns.set_theme()
+```
