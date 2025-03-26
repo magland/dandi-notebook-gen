@@ -24,13 +24,15 @@ This will print the metadata of the Dandiset, including its name, description, a
 dandi-notebook-gen-tools dandiset-assets {{ DANDISET_ID }}
 ```
 
-This will print the assets (files) available in the Dandiset. For each NWB file it will include a URL that can be passed into the nwb-file-info tool.
+This will print the assets (files) available in the Dandiset. For each NWB file it will include the asset ID. From the asset ID you can construct the associated URL as follows:
+
+https://api.dandiarchive.org/api/assets/{{ ASSET_ID }}/download/
 
 ```bash
 dandi-notebook-gen-tools nwb-file-info {{ DANDISET_ID }} <NWB_FILE_URL>
 ```
 
-This will print usage information on how to load data from the NWB file.
+This will print usage information on how to load data from the NWB file. Be sure to use the URL provided by this tool to load the NWB file.
 
 It's very important that you use all of the above tools before you start creating the notebook so you understand the Dandiset, the data it contains, and how to load that data in Python.
 
@@ -44,7 +46,7 @@ The resulting Jupytext should include a code block at the start of the notebook 
 # %%
 from dandi.dandiapi import DandiAPIClient
 client = DandiAPIClient()
-dandiset = client.get_dandiset({{ DANDISET_ID }})
+dandiset = client.get_dandiset("{{ DANDISET_ID }}")
 assets = list(dandiset.get_assets())
 
 The resulting Jupytext should select an NWB file from the Dandiset that contains data that would be nice to visualize.
