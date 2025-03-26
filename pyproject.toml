@@ -19,7 +19,8 @@ dependencies = [
 ]
 
 [project.scripts]
-dandi-notebook-gen = "dandi_notebook_gen.cli:main"
+dandi-notebook-gen-tools = "dandi_notebook_gen.cli:main"
+dandi-notebook-gen = "dandi_notebook_gen.cli:notebook_gen_main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["dandi_notebook_gen"]

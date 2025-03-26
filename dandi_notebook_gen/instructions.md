@@ -15,19 +15,19 @@ The notebook should
 In order to get information about the Dandiset and how to load data from NWB files within the Dandiset, you will need to use the following command-line tools:
 
 ```bash
-dandi-notebook-gen-tools dandiset_info <DANDISET_ID>
+dandi-notebook-gen-tools dandiset-info <DANDISET_ID>
 ```
 
 This will print the metadata of the Dandiset, including its name, description, and key metadata.
 
 ```bash
-dandi-notebook-gen-tools dandiset_assets <DANDISET_ID>
+dandi-notebook-gen-tools dandiset-assets <DANDISET_ID>
 ```
 
-This will print the assets (files) available in the Dandiset. For each NWB file it will include a URL that can be passed into the nwb_file_info tool.
+This will print the assets (files) available in the Dandiset. For each NWB file it will include a URL that can be passed into the nwb-file-info tool.
 
 ```bash
-dandi-notebook-gen-tools nwb_file_info <NWB_FILE_URL>
+dandi-notebook-gen-tools nwb-file-info <DANDISET_ID> <NWB_FILE_URL>
 ```
 
 This will print usage information on how to load data from the NWB file.
@@ -40,7 +40,15 @@ Your resulting Jupytext should be educational, well-documented, and follow best 
 
 The resulting Jupytext should not include instructions to run pip install (no code cells starting with "!"). The markdown cells should include instructions for the user to install any necessary packages.
 
-The resulting Jupytext should use the DANDI API to list the assets in the Dandiset.
+The resulting Jupytext should include a code block at the start of the notebook that uses the DANDI API to list all of the assets in the Dandiset. This code block should look like:
+# %%
+from dandi.dandiapi import DandiAPIClient
+client = DandiAPIClient()
+dandiset_id = "000000"
+dandiset = client.get_dandiset(dandiset_id)
+assets = list(dandiset.get_assets())
+
+But the `dandiset_id` should be the actual ID of the Dandiset you are working with.
 
 The resulting Jupytext should select an NWB file from the Dandiset that contains data that would be nice to visualize.
 
@@ -62,4 +70,4 @@ Keep in mind that through your tool calls you have been given information about 
 
 When showing unit IDs or channel IDs, be sure to use the actual IDs rather than just the indices.
 
-When calling `lindi.LindiH5pyFile.from_lindi_file` with a URL, the URL should be a nwb.lindi.json file which should come from the nwb_file_info tool. It should NOT be a download URL to the NWB file from api.dandiarchive.org.
+When calling `lindi.LindiH5pyFile.from_lindi_file` with a URL, the URL should be a nwb.lindi.json file which should come from the nwb-file-info tool. It should NOT be a download URL to the NWB file from api.dandiarchive.org.
