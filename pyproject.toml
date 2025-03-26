@@ -14,6 +14,8 @@ dependencies = [
     "jupyter",
     "jupytext",
     "dandi",
+    "requests",
+    "python-dotenv",
 ]
 
 [project.scripts]

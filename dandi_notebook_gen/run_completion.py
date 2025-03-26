@@ -1,9 +1,15 @@
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional, Tuple
 import json
 import requests
 import os
+from pathlib import Path
+from dotenv import load_dotenv
 
 from .tools import dandiset_assets, nwb_file_info, dandiset_info
+from .logger import AILogger
+
+# Load environment variables from .env file
+load_dotenv()
 
 available_tools = [
     getattr(dandiset_info, "spec"),
@@ -14,8 +20,11 @@ available_tools = [
 def run_completion(
     messages: List[Dict[str, Any]],
     *,
-    model: str
-):
+    model: str,
+    log_dir: str = "logs",
+    log_file: Optional[str] = None,
+    metadata: Optional[Dict[str, Any]] = None
+) -> Tuple[str, List[Dict[str, Any]], int, int]:
     """Execute an AI completion request using the OpenRouter API with support for tool calls.
 
     This function manages a conversation with an AI model, handling tool execution
@@ -24,6 +33,9 @@ def run_completion(
     Args:
         messages: List of conversation messages, each being a dictionary with role and content.
         model: Name of the OpenRouter model to use for completion.
+        log_dir: Directory where log files will be stored, by default "logs"
+        log_file: Name of the log file. If None, a timestamped filename will be generated.
+        metadata: Additional metadata to include in the log entry.
 
     Returns:
         tuple: Contains:
@@ -50,6 +62,8 @@ def run_completion(
         ...
     ]
     """
+    # Initialize the logger
+    logger = AILogger(log_dir=log_dir, log_file=log_file)
     api_key = os.getenv("OPENROUTER_API_KEY")
     if not api_key:
         raise ValueError("OPENROUTER_API_KEY environment variable not set")
@@ -140,4 +154,15 @@ def run_completion(
                 }
                 conversation_messages.append(tool_response)
         else:
+            # Log the interaction
+            logger.log_interaction(
+                input_messages=messages,
+                output_content=content,
+                conversation_messages=conversation_messages,
+                prompt_tokens=total_prompt_tokens,
+                completion_tokens=total_completion_tokens,
+                model=model,
+                metadata=metadata
+            )
+
             return content, conversation_messages, total_prompt_tokens, total_completion_tokens
