@@ -60,3 +60,5 @@ def generate_notebook(dandiset_id: str, output_path=None, model="google/gemini-2
             raise FileNotFoundError("notebook.py was not created")
         # move the notebook.py to the output path
         os.rename(notebook_path, output_path)
+
+    return output_path
