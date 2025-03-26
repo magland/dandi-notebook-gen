@@ -43,6 +43,8 @@ def generate_notebook(dandiset_id: str, output_path=None, model="google/gemini-2
         output_path = f"dandiset_{dandiset_id}_exploration.py"
 
     instructions = read_instructions()
+    # replace {{ DANDISET_ID }} with the actual dandiset_id
+    instructions = instructions.replace("{{ DANDISET_ID }}", dandiset_id)
 
     # Create a temporary directory
     with TemporaryDirectory() as temp_dir:
