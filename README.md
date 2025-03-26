@@ -53,13 +53,6 @@ print(f"Generated notebook script at: {output_path}")
 
 # Specify a different AI model
 output_path = generate_notebook("000001", model="anthropic/claude-3-sonnet:beta")
-
-# Specify custom logging options
-output_path = generate_notebook(
-    "000001",
-    log_dir="custom_logs",
-    log_file="my_log.json"
-)
 ```
 
 ### Converting to Jupyter Notebook

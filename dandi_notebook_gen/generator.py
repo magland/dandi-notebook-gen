@@ -20,7 +20,7 @@ def read_instructions() -> str:
     with open(prompt_path, 'r') as f:
         return f.read()
 
-def generate_notebook(dandiset_id: str, output_path=None, model="anthropic/claude-3-opus:beta", log_dir="logs", log_file=None):
+def generate_notebook(dandiset_id: str, output_path=None, model="anthropic/claude-3-opus:beta"):
     """
     Generate a Python script in jupytext format for exploring a Dandiset.
 
@@ -32,10 +32,6 @@ def generate_notebook(dandiset_id: str, output_path=None, model="anthropic/claud
         Path where the script should be saved. If None, a default path will be used.
     model : str, optional
         The AI model to use for generating the notebook content.
-    log_dir : str, optional
-        Directory where log files will be stored. Default is "logs".
-    log_file : str, optional
-        Name of the log file. If None, a timestamped filename will be generated.
 
     Returns
     -------
