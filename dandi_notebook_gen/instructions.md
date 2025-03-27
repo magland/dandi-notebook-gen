@@ -15,10 +15,11 @@ Here's the plan that you should follow:
 2. Get the Dandiset assets using `dandi-notebook-gen-tools dandiset-assets {{ DANDISET_ID }}`.
 3. Choose an NWB file from the assets and get its information using `dandi-notebook-gen-tools nwb-file-info {{ DANDISET_ID }} <NWB_FILE_URL>`.
 4. Do exploratory research on the contents of the Dandiset by creating and executing python scripts in a tmp_scripts subdirectory to generate text output and plots.
-  - If the script times out, you may be trying to load too much data. Try revising the script and rerun.
+  - It's very important that the plots go to .PNG image files in the tmp_scripts subdirectory. Otherwise, if the plot is displayed in a window, the script will hang. So do not do a plt.show().
+  - If the script times out (use a timeout of 60 seconds for the scripts), you may be trying to load too much data. Try revising the script and rerun.
   - After executing each script, if you created plots, review the plots using `dandi-notebook-gen-tools analyze-plot tmp_scripts/{name.png}` to make sure they are informative and useful. If they are not, you may need to adjust the script and re-run it.
 5. Write the content of the notebook to `notebook.py`, including the introduction, dataset structure exploration, sample data access and visualization, explanatory markdown cells, and examples of common analyses.
-6. Run `jupytext --to notebook notebook.py && jupyter execute --inplace notebook.ipynb` to convert the notebook to a Jupyter notebook and execute the resulting `notebook.ipynb` to make sure it runs without errors and produces output cells.
+6. Run `jupytext --to notebook notebook.py && jupyter execute --inplace notebook.ipynb` to convert the notebook to a Jupyter notebook and execute the resulting `notebook.ipynb` to make sure it runs without errors and produces output cells. Use a timeout of 180 seconds. If it times out, you may need to adjust the notebook and re-run.
 7. If there are errors, fix them in the Jupytext `notebook.py` file, re-run the above command to convert and execute, repeating these steps until the notebook runs properly.
 
 ## Calling tools
