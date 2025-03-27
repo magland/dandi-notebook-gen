@@ -16,7 +16,12 @@ dependencies = [
     "dandi",
     "requests",
     "python-dotenv",
-    "minicline"
+    "minicline",
+    "lindi",
+    "pynwb",
+    "scipy",
+    "matplotlib",
+    "seaborn"
 ]
 
 [project.scripts]
