@@ -16,6 +16,7 @@ dependencies = [
     "dandi",
     "requests",
     "python-dotenv",
+    "minicline"
 ]
 
 [project.scripts]

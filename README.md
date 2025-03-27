@@ -7,12 +7,12 @@ Python package for generating AI-powered notebooks for exploring Dandisets and w
 You can install the package directly from the repository:
 
 ```bash
-pip install -e .
+pip install .
 ```
 
 ## Configuration
 
-This package uses the minicline library to interact with AI models. Configuration may be required depending on the AI model being used. See the minicline documentation for more details.
+This package uses the minicline library to interact with AI models. See the [minicline](https://github.com/magland/minicline) documentation for more details.
 
 ## Usage
 
@@ -34,6 +34,8 @@ dandi-notebook-gen 000001 --output my_notebook.py
 
 #### Get Dandiset Information
 
+This tool is used internally by the notebook generator, but can also be used directly:
+
 ```bash
 # Get information about a Dandiset
 dandi-notebook-gen-tools dandiset-info 000001
@@ -46,6 +48,8 @@ dandi-notebook-gen-tools dandiset-info 000001 --output info.json
 ```
 
 #### List Dandiset Assets
+
+This tool is used internally by the notebook generator, but can also be used directly:
 
 ```bash
 # List assets in a Dandiset
@@ -62,6 +66,8 @@ dandi-notebook-gen-tools dandiset-assets 000001 --output assets.json
 ```
 
 #### Get NWB File Information
+
+This tool is used internally by the notebook generator, but can also be used directly:
 
 ```bash
 # Get information about an NWB file
@@ -101,63 +107,14 @@ assets = dandiset_assets("000001", glob="*.nwb", page=1, page_size=10)
 nwb_info = nwb_file_info("000001", "https://api.dandiarchive.org/api/assets/ASSET_ID/download/")
 ```
 
-### Converting to Jupyter Notebook
-
-The package generates Python scripts in jupytext format. To convert to a Jupyter notebook:
-
-```bash
-# Install jupytext if not already installed
-pip install jupytext
-
-# Convert the Python script to a notebook
-jupytext --to notebook dandiset_000001_exploration.py
-```
-
-## Logging
-
-The package uses the minicline library to handle AI interactions. Logging functionality may be available through this library.
-
 ## How It Works
 
 The package uses AI to generate a comprehensive notebook for exploring a Dandiset:
 
 1. It uses the minicline library to perform tasks with AI models
-2. The AI uses tools to gather information about the Dandiset, including metadata and file listings
-3. The AI generates a notebook with explanatory text and code for exploring the dataset
-4. The notebook is formatted as a jupytext Python file that can be converted to a Jupyter notebook
-
-## DANDI Tools
-
-The package includes several tools for working with DANDI datasets:
-
-### dandiset_info
-
-Get detailed information about a DANDI dataset, including:
-- Name and description
-- Access and license information
-- Citation details
-- Keywords and protocol
-- Contributor names
-- Date created
-- Size and number of files
-- Number of subjects
-- Variables measured
-- Measurement techniques
-
-### dandiset_assets
-
-Get a list of assets/files in a DANDI dataset, including:
-- Total count of assets
-- Asset IDs
-- File paths
-- File sizes
-
-### nwb_file_info
-
-Get information about an NWB file, including:
-- Metadata
-- Information about neurodata objects
-- Instructions for loading the data using pynwb and lindi
+2. Uses tools to gather information about the Dandiset, including metadata and file listings\
+3. Uses exploratory analysis on the Dandiset, including creating an executing scripts, generating plots, and using AI vision to interpret the plots.
+4. Generates a notebook with explanatory text and code for exploring the dataset
 
 ## Development
 
@@ -172,18 +129,4 @@ cd dandi-notebook-gen
 
 # Install in development mode with development dependencies
 pip install -e ".[dev]"
-
-# Run tests
-pytest
 ```
-
-## Testing
-
-This package uses pytest for testing. To run the tests:
-
-```bash
-# Run all tests
-pytest
-
-# Run tests with coverage report
-pytest --cov=dandi_notebook_gen
