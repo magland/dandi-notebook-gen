@@ -1,6 +1,8 @@
 # dandi-notebook-gen
 
-Python package for generating AI-powered notebooks for exploring Dandisets and working with DANDI datasets
+Python package for generating AI-powered notebooks for exploring Dandisets and working with DANDI datasets.
+
+This package was created during the [Pre-COSYNE Brainhack](https://pre-cosyne-brainhack.github.io/hackathon2025/posts/about/), March 2025, Montreal.
 
 ## Installation
 

@@ -20,7 +20,7 @@ def read_instructions() -> str:
     with open(prompt_path, 'r') as f:
         return f.read()
 
-def generate_notebook(dandiset_id: str, output_path=None, model="google/gemini-2.0-flash-001"):
+def generate_notebook(dandiset_id: str, output_path=None, *, model="google/gemini-2.0-flash-001", auto: bool=False, approve_all_commands: bool=False) -> str:
     """
     Generate a Python script in jupytext format for exploring a Dandiset.
 
@@ -32,6 +32,10 @@ def generate_notebook(dandiset_id: str, output_path=None, model="google/gemini-2
         Path where the script should be saved. If None, a default path will be used.
     model : str, optional
         The AI model to use for generating the notebook content.
+    auto : bool, optional
+        Whether to run minicline in auto mode.
+    approve_all_commands : bool, optional
+        Whether to run minicline in approve_all_commands mode.
 
     Returns
     -------
@@ -41,6 +45,11 @@ def generate_notebook(dandiset_id: str, output_path=None, model="google/gemini-2
     # Determine the output path
     if output_path is None:
         output_path = f"dandiset_{dandiset_id}_exploration.ipynb"
+    if not output_path.endswith(".ipynb"):
+        raise ValueError("Output path must end with '.ipynb'")
+
+    if approve_all_commands and not auto:
+        raise ValueError("approve_all_commands can only be used with auto mode")
 
     instructions = read_instructions()
     # replace {{ DANDISET_ID }} with the actual dandiset_id
@@ -53,6 +62,8 @@ def generate_notebook(dandiset_id: str, output_path=None, model="google/gemini-2
             instructions=instructions,
             model=model,
             cwd=temp_dir,
+            auto=auto,
+            approve_all_commands=approve_all_commands
         )
         # check that the notebook.ipynb was created
         notebook_path = os.path.join(temp_dir, "notebook.ipynb")

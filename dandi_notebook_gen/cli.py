@@ -11,7 +11,9 @@ from .tools import dandiset_assets, nwb_file_info, dandiset_info, analyze_plot
 @click.argument("dandiset_id", type=str)
 @click.option("--output", "-o", default=None, help="Output file path for the notebook")
 @click.option("--model", "-m", default="anthropic/claude-3.5-sonnet", help="OpenRouter model name")
-def notebook_gen_cli(dandiset_id, output, model):
+@click.option("--auto", is_flag=True, help="Run minicline in auto mode")
+@click.option("--approve-all-commands", is_flag=True, help="Run minicline in approve_all_commands mode")
+def notebook_gen_cli(dandiset_id, output, model, auto, approve_all_commands):
     """
     Generate a Jupyter notebook for exploring a Dandiset.
 
@@ -20,7 +22,7 @@ def notebook_gen_cli(dandiset_id, output, model):
     click.echo(f"Generating notebook for Dandiset {dandiset_id}")
 
     try:
-        notebook_path = generate_notebook(dandiset_id, output, model=model)
+        notebook_path = generate_notebook(dandiset_id, output_path=output, model=model, auto=auto, approve_all_commands=approve_all_commands)
         click.echo(f"Notebook generated successfully: {notebook_path}")
     except Exception as e:
         click.echo(f"Error generating notebook: {str(e)}", err=True)
