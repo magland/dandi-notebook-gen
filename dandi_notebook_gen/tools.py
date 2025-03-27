@@ -238,7 +238,7 @@ def analyze_plot(image_path: str, additional_instructions: Optional[str] = None)
                 "content": [
                     {
                         "type": "text",
-                        "text": "Please provide a very detailed description and analysis of the plot in the image below."
+                        "text": "Please provide a detailed description and analysis of the plot in the image below."
                     },
                     {
                         "type": "image_url",
