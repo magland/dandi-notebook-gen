@@ -89,7 +89,7 @@ output_path = generate_notebook("000001")
 print(f"Generated notebook script at: {output_path}")
 
 # Specify a different AI model
-output_path = generate_notebook("000001", model="anthropic/claude-3-sonnet:beta")
+output_path = generate_notebook("000001", model="anthropic/claude-3.5-sonnet")
 ```
 
 #### Use DANDI Tools

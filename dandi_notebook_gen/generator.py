@@ -20,7 +20,7 @@ def read_instructions() -> str:
     with open(prompt_path, 'r') as f:
         return f.read()
 
-def generate_notebook(dandiset_id: str, output_path=None, model="anthropic/claude-3.5-sonnet"):
+def generate_notebook(dandiset_id: str, output_path=None, model="google/gemini-2.0-flash-001"):
     """
     Generate a Python script in jupytext format for exploring a Dandiset.
 
