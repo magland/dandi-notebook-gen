@@ -63,7 +63,7 @@ IMPORTANT: Every good quality plot produced by the scripts should be included in
 
 Your resulting Jupytext should be educational, well-documented, and follow best practices for neurophysiology data analysis. Include comments in code cells to explain what each step does.
 
-Prominently inform the user that the notebook was AI-generated with human supervision and has not been fully verified, and that they should be cautious when interpreting the code or results.
+Prominently inform the user that the notebook was AI-generated using dandi-notebook-gen and has not been fully verified, and that they should be cautious when interpreting the code or results.
 
 Assume that all the packages you would need are already installed on the user's system. The resulting Jupytext should not include instructions to run pip install (no code cells starting with "!"). The markdown cells should include instructions for the user to install any necessary packages.
 
