@@ -5,7 +5,7 @@ Command-line interfaces for dandi-notebook-gen and dandi-notebook-gen-tools
 import json
 import click
 from .generator import generate_notebook
-from .tools import dandiset_assets, nwb_file_info, dandiset_info, analyze_plot
+from .tools import dandiset_assets, nwb_file_info, dandiset_info
 
 @click.command(name="dandi-notebook-gen")
 @click.argument("dandiset_id", type=str)
@@ -117,32 +117,6 @@ def dataset_info(dandiset_id, version, output):
             click.echo(json.dumps(result, indent=2))
     except Exception as e:
         click.echo(f"Error retrieving dandiset info: {str(e)}", err=True)
-        raise click.Abort()
-
-@cli.command(name="analyze-plot")
-@click.argument("image_path", type=str)
-@click.option("--additional-instructions", default=None, help="Additional instructions to include in the system prompt")
-@click.option("--output", "-o", default=None, help="Output file path for the results (default: print to stdout)")
-def analyze_plot_cmd(image_path, additional_instructions, output):
-    """
-    Analyze a scientific plot using GPT-4V vision model.
-
-    IMAGE_PATH: Full path to the image file (PNG format recommended)
-    """
-    try:
-        result = analyze_plot(
-            image_path=image_path,
-            additional_instructions=additional_instructions
-        )
-
-        if output:
-            with open(output, 'w') as f:
-                json.dump(result, f, indent=2)
-            click.echo(f"Results saved to {output}")
-        else:
-            click.echo(json.dumps(result, indent=2))
-    except Exception as e:
-        click.echo(f"Error analyzing plot: {str(e)}", err=True)
         raise click.Abort()
 
 def main():

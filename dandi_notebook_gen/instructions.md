@@ -17,7 +17,7 @@ Here's the plan that you should follow:
 4. Do exploratory research on the contents of the Dandiset by creating and executing python scripts in a tmp_scripts subdirectory to generate text output and plots.
   - It's very important that the plots go to .PNG image files in the tmp_scripts subdirectory. Otherwise, if the plot is displayed in a window, the script will hang. So do not do a plt.show().
   - If the script times out (use a timeout of 90 seconds for the scripts), you may be trying to load too much data. Try revising the script and rerun.
-  - After executing each script, if you created plots, review the plots using `dandi-notebook-gen-tools analyze-plot tmp_scripts/{name.png}` to make sure they are informative and useful. If they are not, you may need to adjust the script and re-run it.
+  - After executing each script, if you created plots, review the plots using the read_image tool to be able to gain information about them. If they are not informative and useful or do not convey the expected information, you may need to adjust the script and re-run it.
 5. Write the content of the notebook to `notebook.py`, including the introduction, dataset structure exploration, sample data access and visualization, explanatory markdown cells, and examples of common analyses.
 6. Run `jupytext --to notebook notebook.py && jupyter execute --inplace notebook.ipynb` to convert the notebook to a Jupyter notebook and execute the resulting `notebook.ipynb` to make sure it runs without errors and produces output cells. Use a timeout of 300 seconds. If it times out, you should adjust the notebook and re-run.
 7. If there are errors, fix them in the Jupytext `notebook.py` file, re-run the above command to convert and execute, repeating these steps until the notebook runs properly.
@@ -50,10 +50,7 @@ It's very important that you use all of the above tools before you start creatin
 
 # Exploring the NWB file
 
-Create and execute python scripts in a tmp_scripts subdirectory. The scripts can generate text output and/or plots. The plots image files should also go in the tmp_scripts subdirectory. You should always call
-```bash
-dandi-notebook-gen-tools analyze-plot tmp_scripts/{name.png}
-```
+Create and execute python scripts in a tmp_scripts subdirectory. The scripts can generate text output and/or plots. The plots image files should also go in the tmp_scripts subdirectory. You should always use the read_image tool to read the image files for the plots you create.
 
 to learn about the graphs that you create. This will help you know whether the graphs are informative enough to include in the notebook as well as information about the data that will help you make decisions and know how to describe things in the notebook. Both the script outputs and plots will help inform you about what to put in the notebook. Feel free to transform, process, and combine the data in common ways to make interesting, informative plots for a scientist to interpret. Feel free to run as many scripts as you need to gather the information required to make a good notebook. The more quality information you have, the better you will be able to do in making the notebook. Include comments at the top of each script explaining what information you are trying to obtain with the script.
 
