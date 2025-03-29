@@ -1,7 +1,5 @@
 from typing import Dict, Any, Optional
 import requests
-import os
-import base64
 
 def dandiset_assets(
     dandiset_id: str,
