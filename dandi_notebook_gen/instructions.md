@@ -19,8 +19,12 @@ Here's the plan that you should follow:
   - If the script times out (use a timeout of 90 seconds for the scripts), you may be trying to load too much data. Try revising the script and rerun.
   - After executing each script, if you created plots, always review each plot using the read_image tool to be able to gain information about them. Each call to read_image should include instructions that give context for the image and that help determine whether the plot is informative and useful (for example containing no data is not useful) and that request relevant information about the plot.
 5. Write the content of the notebook to `notebook.py`, including the introduction, dataset structure exploration, sample data access and visualization, explanatory markdown cells, and examples of common analyses.
-6. Run `jupytext --to notebook notebook.py && jupyter execute --inplace notebook.ipynb` to convert the notebook to a Jupyter notebook and execute the resulting `notebook.ipynb` to make sure it runs without errors and produces output cells. Use a timeout of 300 seconds. If it times out, you should adjust the notebook and re-run.
+6. Run `jupytext --to notebook notebook.py && jupyter execute --inplace notebook.ipynb` to convert the notebook to a Jupyter notebook and execute the resulting `notebook.ipynb` to make sure it runs without errors and produces output cells. Use a timeout of 600 seconds. If it times out, you should adjust the notebook and re-run.
 7. If there are errors, fix them in the Jupytext `notebook.py` file, re-run the above command to convert and execute, repeating these steps until the notebook runs properly.
+
+## Be careful about drawing conclusions
+
+The purpose of this notebook is to get the user started in analyzing the Dandiset, including showing how to get started with relevant analyses. However, while you should make observations about what the user is seeing in the plots, it's important that you avoid making claims that are not supported by the appropriate statistical tests. The AI summary of plots in the read_image tool can sometimes hallucinate and report trends in the data that are not significantly significant, which is something you should be aware of. You may want to instruct the read_image tool to be careful about this. If there are obvious and apparent features of plots, then it is appropriate to point them out. But be mindful of the limitations and avoid overinterpreting the data.
 
 ## Calling tools
 
