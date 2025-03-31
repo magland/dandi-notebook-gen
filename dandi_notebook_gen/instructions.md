@@ -26,6 +26,8 @@ Here's the plan that you should follow:
 
 The purpose of this notebook is to get the user started in analyzing the Dandiset, including showing how to get started with relevant analyses. However, while you should make observations about what the user is seeing in the plots, it's important that you avoid making claims that are not supported by the appropriate statistical tests. The AI summary of plots in the read_image tool can sometimes hallucinate and report trends in the data that are not significantly significant, which is something you should be aware of. You may want to instruct the read_image tool to be careful about this. If there are obvious and apparent features of plots, then it is appropriate to point them out. But be mindful of the limitations and avoid overinterpreting the data.
 
+When summarizing the notebook, do not draw scientific conclusions from the data. Instead, focus on what data are available, the process of exploring the data and the types of analyses that can be done.
+
 ## Calling tools
 
 In order to get information about the Dandiset and how to load data from NWB files within the Dandiset, you will need to use the following command-line tools:
