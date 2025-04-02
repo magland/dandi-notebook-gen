@@ -81,7 +81,7 @@ The resulting Jupytext should select an NWB file from the Dandiset that contains
 
 The Jupytext should use `# %% [markdown]` for markdown cells and `# %%` delimiters for the code cells.
 
-## Some notes:
+## Some notes
 
 If you load data from only select files, then you should indicate which files you are using.
 
@@ -104,6 +104,9 @@ When calling `lindi.LindiH5pyFile.from_lindi_file` you should not use the downlo
 import seaborn as sns
 sns.set_theme()
 ```
+
 Do not use seaborn styling for plotting images.
 
 Image masks values range from 0 to 1. If you are plotting all image masks superimposed on each other in a single figure, use a heatmap with np.max on the image masks.
+
+For raw extracellular electrophysiology data, you shouldn't try to do spike detection, spike sorting, or anything like that in the notebook because it's too computationally intensive. Getting anything useful from extracullular electrophysiology data requires a lot of processing and is not something that can be done in a notebook. Instead, you should focus on showing how to load a reasonable amount of data and how to visualize it.
