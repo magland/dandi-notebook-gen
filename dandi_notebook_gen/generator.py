@@ -24,7 +24,7 @@ def read_instructions() -> str:
     with open(prompt_path, 'r') as f:
         return f.read()
 
-def generate_notebook(dandiset_id: str, output_path=None, *, model="google/gemini-2.0-flash-001", auto: bool=False, approve_all_commands: bool=False, working_dir: Union[str, None]=None) -> str:
+def generate_notebook(dandiset_id: str, output_path=None, *, model="google/gemini-2.0-flash-001", vision_model: Union[str, None]=None, auto: bool=False, approve_all_commands: bool=False, working_dir: Union[str, None]=None) -> str:
     """
     Generate a Python script in jupytext format for exploring a Dandiset.
 
@@ -36,6 +36,8 @@ def generate_notebook(dandiset_id: str, output_path=None, *, model="google/gemin
         Path where the script should be saved. If None, a default path will be used.
     model : str, optional
         The AI model to use for generating the notebook content.
+    vision_model : str, optional
+        The AI model to use for analyzing images. If None, the model parameter will be used.
     auto : bool, optional
         Whether to run minicline in auto mode.
     approve_all_commands : bool, optional
@@ -57,6 +59,9 @@ def generate_notebook(dandiset_id: str, output_path=None, *, model="google/gemin
     if approve_all_commands and not auto:
         raise ValueError("approve_all_commands can only be used with auto mode")
 
+    if not vision_model:
+        vision_model = model
+
     instructions = read_instructions()
     # replace {{ DANDISET_ID }} with the actual dandiset_id
     instructions = instructions.replace("{{ DANDISET_ID }}", dandiset_id)
@@ -65,20 +70,28 @@ def generate_notebook(dandiset_id: str, output_path=None, *, model="google/gemin
     def helper(working_dir: str):
         print(f'Using working directory: {working_dir}')
         # perform the task which should ultimately create a notebook.py
-        total_prompt_tokens, total_completion_tokens = perform_task(
+        perform_task_result = perform_task(
             instructions=instructions,
             model=model,
+            vision_model=vision_model,
             cwd=working_dir,
             auto=auto,
             approve_all_commands=approve_all_commands,
             log_file=f'{working_dir}/minicline.log'
         )
+        total_prompt_tokens = perform_task_result.total_prompt_tokens
+        total_completion_tokens = perform_task_result.total_completion_tokens
+        total_vision_prompt_tokens = perform_task_result.total_vision_prompt_tokens
+        total_vision_completion_tokens = perform_task_result.total_vision_completion_tokens
         with open(f'{working_dir}/metadata.json', 'w') as f:
             elapsed_time = time.time() - start_time
             json.dump({
                 'model': model,
+                'vision_model': vision_model,
                 'total_prompt_tokens': total_prompt_tokens,
                 'total_completion_tokens': total_completion_tokens,
+                'total_vision_prompt_tokens': total_vision_prompt_tokens,
+                'total_vision_completion_tokens': total_vision_completion_tokens,
                 'timestamp': time.strftime('%Y-%m-%d %H:%M:%S'),
                 'elapsed_time_seconds': elapsed_time
             }, f, indent=2)
