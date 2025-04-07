@@ -11,7 +11,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from minicline import perform_task
 
-def read_instructions() -> str:
+def read_instructions(experimental_mode: bool) -> str:
     """
     Read the instructions from the markdown file.
 
@@ -21,10 +21,12 @@ def read_instructions() -> str:
         The instructions content.
     """
     prompt_path = Path(__file__).parent / "instructions.md"
+    if experimental_mode:
+        prompt_path = Path(__file__).parent / "instructions_experimental.md"
     with open(prompt_path, 'r') as f:
         return f.read()
 
-def generate_notebook(dandiset_id: str, output_path=None, *, model="google/gemini-2.0-flash-001", vision_model: Union[str, None]=None, auto: bool=False, approve_all_commands: bool=False, working_dir: Union[str, None]=None) -> str:
+def generate_notebook(dandiset_id: str, output_path=None, *, model="google/gemini-2.0-flash-001", vision_model: Union[str, None]=None, auto: bool=False, approve_all_commands: bool=False, working_dir: Union[str, None]=None, experimental_mode=True) -> str:
     """
     Generate a Python script in jupytext format for exploring a Dandiset.
 
@@ -62,7 +64,7 @@ def generate_notebook(dandiset_id: str, output_path=None, *, model="google/gemin
     if not vision_model:
         vision_model = model
 
-    instructions = read_instructions()
+    instructions = read_instructions(experimental_mode=experimental_mode)
     # replace {{ DANDISET_ID }} with the actual dandiset_id
     instructions = instructions.replace("{{ DANDISET_ID }}", dandiset_id)
 
