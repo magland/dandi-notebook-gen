@@ -1,4 +1,4 @@
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 import requests
 
 def dandiset_assets(
@@ -165,6 +165,54 @@ where XXXXXX is the dandiset ID and XXXXX is the version.""",
 }
 setattr(dandiset_assets, "spec", dandiset_assets_spec)
 
+def dandi_search(query: str, limit: int = 10) -> Dict[str, Any]:
+    """Search for datasets in the DANDI archive using keywords.
+
+    Parameters
+    ----------
+    query : str
+        Search query text
+    limit : int, optional
+        Maximum number of results, by default 10
+
+    Returns
+    -------
+    Dict[str, Any]
+        Dictionary containing search results
+    """
+    url = "https://neurosift-chat-agent-tools.vercel.app/api/dandi_search"
+    payload = {"query": query, "limit": limit}
+    response = requests.post(url, json=payload)
+    if response.status_code != 200:
+        raise RuntimeError(f"Failed to search DANDI archive: {response.text}")
+    return response.json()
+
+
+def dandi_semantic_search(query: str, limit: int = 10) -> Dict[str, Any]:
+    """Semantic search for DANDI datasets using natural language.
+
+    Uses semantic embeddings to find similar datasets to the query text.
+
+    Parameters
+    ----------
+    query : str
+        Natural language query text
+    limit : int, optional
+        Maximum number of results, by default 10
+
+    Returns
+    -------
+    Dict[str, Any]
+        Dictionary containing search results
+    """
+    url = "https://neurosift-chat-agent-tools.vercel.app/api/dandi_semantic_search"
+    payload = {"query": query, "limit": limit}
+    response = requests.post(url, json=payload)
+    if response.status_code != 200:
+        raise RuntimeError(f"Failed to perform semantic search: {response.text}")
+    return response.json()
+
+
 nwb_file_info_spec = {
     "type": "function",
     "function": {
@@ -188,3 +236,46 @@ Be careful not to load too much data at once, as it can be slow and use a lot of
 }
 setattr(nwb_file_info, "spec", nwb_file_info_spec)
 
+dandi_search_spec = {
+    "type": "function",
+    "function": {
+        "name": "dandi_search",
+        "description": """Search for datasets in the DANDI archive.
+
+Returns search results with metadata about matching datasets.""",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "query": {"type": "string", "description": "Search query text"},
+                "limit": {
+                    "type": "integer",
+                    "description": "Maximum number of results (optional, defaults to 10)",
+                },
+            },
+            "required": ["query"],
+        },
+    },
+}
+setattr(dandi_search, "spec", dandi_search_spec)
+
+dandi_semantic_search_spec = {
+    "type": "function",
+    "function": {
+        "name": "dandi_semantic_search",
+        "description": """Semantic search for DANDI datasets using natural language.
+        
+Uses semantic embeddings to find similar datasets to the query text.""",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "query": {"type": "string", "description": "Natural language query text"},
+                "limit": {
+                    "type": "integer",
+                    "description": "Maximum number of results (optional, defaults to 10)",
+                },
+            },
+            "required": ["query"],
+        },
+    },
+}
+setattr(dandi_semantic_search, "spec", dandi_semantic_search_spec)
