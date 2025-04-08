@@ -11,9 +11,16 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from minicline import perform_task
 
-def read_instructions(experimental_mode: bool) -> str:
+def read_instructions(experimental_mode: bool = False, scientific_mode: bool = False) -> str:
     """
     Read the instructions from the markdown file.
+
+    Parameters
+    ----------
+    experimental_mode : bool, optional
+        Whether to use experimental mode instructions.
+    scientific_mode : bool, optional
+        Whether to use scientific findings mode instructions.
 
     Returns
     -------
@@ -23,17 +30,22 @@ def read_instructions(experimental_mode: bool) -> str:
     prompt_path = Path(__file__).parent / "instructions.md"
     if experimental_mode:
         prompt_path = Path(__file__).parent / "instructions_experimental.md"
+    elif scientific_mode:
+        prompt_path = Path(__file__).parent / "instructions_scientific_findings.md"
     with open(prompt_path, 'r') as f:
         return f.read()
 
-def generate_notebook(dandiset_id: str, output_path=None, *, model="google/gemini-2.0-flash-001", vision_model: Union[str, None]=None, auto: bool=False, approve_all_commands: bool=False, working_dir: Union[str, None]=None, experimental_mode=True) -> str:
+def generate_notebook(dandiset_id: str = None, output_path=None, *, phenomenon: str = None, model="google/gemini-2.0-flash-001", vision_model: Union[str, None]=None, auto: bool=False, approve_all_commands: bool=False, working_dir: Union[str, None]=None, experimental_mode=False, scientific_mode=False) -> str:
     """
-    Generate a Python script in jupytext format for exploring a Dandiset.
+    Generate a Python script in jupytext format for exploring a Dandiset or demonstrating a scientific phenomenon.
 
     Parameters
     ----------
-    dandiset_id : str
-        The ID of the Dandiset to generate a notebook for.
+    dandiset_id : str, optional
+        The ID of the Dandiset to generate a notebook for. Required for standard and experimental modes.
+        In scientific_mode, this can be None and will be determined during the notebook generation.
+    phenomenon : str, optional
+        The scientific phenomenon to demonstrate. Required for scientific_mode.
     output_path : str, optional
         Path where the script should be saved. If None, a default path will be used.
     model : str, optional
@@ -54,7 +66,10 @@ def generate_notebook(dandiset_id: str, output_path=None, *, model="google/gemin
     """
     # Determine the output path
     if output_path is None:
-        output_path = f"dandiset_{dandiset_id}_exploration.ipynb"
+        if scientific_mode:
+            output_path = f"{phenomenon.lower().replace(' ', '_')}_demonstration.ipynb"
+        else:
+            output_path = f"dandiset_{dandiset_id}_exploration.ipynb"
     if not output_path.endswith(".ipynb"):
         raise ValueError("Output path must end with '.ipynb'")
 
@@ -64,9 +79,18 @@ def generate_notebook(dandiset_id: str, output_path=None, *, model="google/gemin
     if not vision_model:
         vision_model = model
 
-    instructions = read_instructions(experimental_mode=experimental_mode)
-    # replace {{ DANDISET_ID }} with the actual dandiset_id
-    instructions = instructions.replace("{{ DANDISET_ID }}", dandiset_id)
+    if scientific_mode:
+        if phenomenon is None:
+            raise ValueError("phenomenon parameter is required in scientific_mode")
+        instructions = read_instructions(scientific_mode=scientific_mode)
+        # replace {{ PHENOMENON }} with the actual phenomenon
+        instructions = instructions.replace("{{ PHENOMENON }}", phenomenon)
+    else:
+        if dandiset_id is None:
+            raise ValueError("dandiset_id parameter is required in standard and experimental modes")
+        instructions = read_instructions(experimental_mode=experimental_mode)
+        # replace {{ DANDISET_ID }} with the actual dandiset_id
+        instructions = instructions.replace("{{ DANDISET_ID }}", dandiset_id)
 
     start_time = time.time()
     def helper(working_dir: str):
