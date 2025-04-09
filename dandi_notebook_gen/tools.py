@@ -1,6 +1,9 @@
 from typing import Dict, Any, Optional
 import requests
 
+# needs to be installed from source: https://github.com/rly/get-nwbfile-info
+from get_nwbfile_info import get_nwbfile_usage_script
+
 def dandiset_assets(
     dandiset_id: str,
     version: str = "draft",
@@ -47,7 +50,7 @@ def dandiset_assets(
         raise RuntimeError(f"Failed to fetch dandiset assets: {response.text}")
     return response.json()
 
-def nwb_file_info(dandiset_id: str, nwb_file_url: str) -> Dict[str, Any]:
+def nwb_file_info(dandiset_id: str, nwb_file_url: str) -> str:
     """Get information about an NWB file.
 
     Includes metadata and information about how to load the neurodata objects
@@ -65,12 +68,17 @@ def nwb_file_info(dandiset_id: str, nwb_file_url: str) -> Dict[str, Any]:
     Dict[str, Any]
         Dictionary containing NWB file information
     """
-    url = "https://neurosift-chat-agent-tools.vercel.app/api/nwb_file_info"
-    payload = {"dandiset_id": dandiset_id, "nwb_file_url": nwb_file_url}
-    response = requests.post(url, json=payload)
-    if response.status_code != 200:
-        raise RuntimeError(f"Failed to fetch NWB file info: {response.text}")
-    return response.json()
+    # old method:
+    # url = "https://neurosift-chat-agent-tools.vercel.app/api/nwb_file_info"
+    # payload = {"dandiset_id": dandiset_id, "nwb_file_url": nwb_file_url}
+    # response = requests.post(url, json=payload)
+    # if response.status_code != 200:
+    #     raise RuntimeError(f"Failed to fetch NWB file info: {response.text}")
+    # return response.json()
+
+    # new method:
+    script = get_nwbfile_usage_script(nwb_file_url)
+    return script
 
 def dandiset_info(dandiset_id: str, version: str = "draft") -> Dict[str, Any]:
     """Get information about a specific version of a DANDI dataset.

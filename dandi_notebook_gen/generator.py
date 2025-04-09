@@ -20,7 +20,7 @@ def read_instructions(experimental_mode: bool) -> str:
     str
         The instructions content.
     """
-    prompt_path = Path(__file__).parent / "instructions.md"
+    prompt_path = Path(__file__).parent / "instructions_v2.txt"
     if experimental_mode:
         prompt_path = Path(__file__).parent / "instructions_experimental.md"
     with open(prompt_path, 'r') as f:

@@ -86,10 +86,16 @@ def nwb_info(dandiset_id, nwb_file_url, output):
 
         if output:
             with open(output, 'w') as f:
-                json.dump(result, f, indent=2)
+                if type(result) == str:
+                    f.write(result)
+                else:
+                    json.dump(result, f, indent=2)
             click.echo(f"Results saved to {output}")
         else:
-            click.echo(json.dumps(result, indent=2))
+            if type(result) == str:
+                click.echo(result)
+            else:
+                click.echo(json.dumps(result, indent=2))
     except Exception as e:
         click.echo(f"Error retrieving NWB file info: {str(e)}", err=True)
         raise click.Abort()
